@@ -1,0 +1,2 @@
+// Sets the output JAR filename
+rootProject.name = "agp-3.3-kotlin-runtime"

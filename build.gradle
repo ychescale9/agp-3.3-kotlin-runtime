@@ -1,0 +1,50 @@
+buildscript {
+    ext {
+        kotlinVersion = "1.2.71"
+    }
+
+    repositories {
+        gradlePluginPortal()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+        google()
+    }
+}
+
+apply plugin: "org.jetbrains.kotlin.jvm"
+apply plugin: "groovy"
+apply plugin: "java-gradle-plugin"
+
+configurations.all {
+    resolutionStrategy {
+        eachDependency { details ->
+            if (details.requested.group == "org.jetbrains.kotlin") {
+                details.useVersion rootProject.ext.kotlinVersion
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+
+    compileOnly ("com.android.tools.build:gradle:3.3.0-alpha12") {
+        exclude module: 'kotlin-stdlib-jre8'
+        exclude module: 'kotlin-stdlib-jdk8'
+    }
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+    kotlinOptions {
+        allWarningsAsErrors = true
+    }
+}
